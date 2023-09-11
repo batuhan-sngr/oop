@@ -11,7 +11,7 @@ class GameObject:
         else:
             print(f"Object State: {state}, Color: {self.color}")
 
-# Example usage:
+
 if __name__ == "__main__":
     obj1 = GameObject(True, 5.0, "Red")
     obj2 = GameObject(False, 0.0, "Blue")
