@@ -118,10 +118,11 @@ class FolderMonitor:
         self.snapshot_time = 0
         self.last_modified = 0  
         self.log = []
-        self.exit_flag = False 
+        self.exit_flag = False
         self.monitoring_thread = None
         self.log_file = "status_log.txt"
         self.previous_files = set()
+        self.log_lock = threading.Lock() 
 
     def add_file(self, filename, file_obj):
         self.files[filename] = file_obj
@@ -143,6 +144,38 @@ class FolderMonitor:
         self.snapshot_time = time.strftime("%Y-%m-d, %H:%M:%S")
         for file in self.files.values():
             file.commit()
+    
+    def run_log_updater(self):
+        while not self.exit_flag:
+            self.update_status_log()
+            time.sleep(5)
+    
+    def update_status_log(self):
+        # Capture the current state of the folder
+        current_files = set(os.listdir(self.folder_path))
+
+        # Check for added files
+        new_files = current_files - set(self.files.keys())
+        for filename in new_files:
+            if filename.endswith(".txt"):
+                self.add_file(filename, TextFile(os.path.join(self.folder_path, filename)))
+            elif filename.endswith((".png", ".jpg")):
+                self.add_file(filename, ImageFile(os.path.join(self.folder_path, filename)))
+            elif filename.endswith((".py", ".java")):
+                self.add_file(filename, ProgramFile(os.path.join(self.folder_path, filename)))
+            self.log.append(f"{filename} was added at {time.strftime('%Y-%m-%d %H:%M:%S')}")
+
+        # Check for deleted files
+        deleted_files = set(self.files.keys()) - current_files
+        for filename in deleted_files:
+            self.log.append(f"{filename} was deleted at {time.strftime('%Y-%m-%d %H:%M:%S')}")
+            del self.files[filename]
+
+        # Write changes to the log file
+        with self.log_lock:
+            with open(self.log_file, "a") as log:
+                log.write("\n".join(self.log))
+                log.write("\n")
     
     def commit(self):
         # Check if the file exists
@@ -232,6 +265,7 @@ class FolderMonitor:
                     print("Invalid command.")
         except KeyboardInterrupt:
             pass  # Handle Ctrl+C gracefully
+
     def check_for_changes(self):
         while not self.exit_flag:
             time.sleep(5)  # Schedule to run every 5 seconds
@@ -259,7 +293,7 @@ class FolderMonitor:
                 del self.files[filename]
 
 if __name__ == '__main__':
-    folder_path = 'D:/Documents/OOP/oop3'  # Replace with the actual folder path
+    folder_path = 'D:/Documents/OOP/oop3/oop'  # Replace with the actual folder path
     monitor = FolderMonitor(folder_path)
 
     # Initial folder scan
@@ -267,8 +301,11 @@ if __name__ == '__main__':
 
     # Start monitoring and detecting changes in a separate thread
     monitoring_thread = threading.Thread(target=monitor.run_monitor)
+    log_updater_thread = threading.Thread(target=monitor.run_log_updater)
     monitor.monitoring_thread = monitoring_thread
+    monitor.log_updater_thread = log_updater_thread
     monitoring_thread.start()
+    log_updater_thread.start()
 
     # Main loop for user input
     monitor.main_loop()
