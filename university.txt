@@ -1,0 +1,26 @@
+Faculty of Computer Science and Information|IT
+Faculty of Mechanical Engineering|Mech
+Faculty of Mathematics and Statistics|Math
+Faculty of Business Administration|Business
+Faculty of Electrical Engineering|Electrical
+Faculty of Civil Engineering|Civil
+Faculty of Physics|Physics
+Faculty of Chemistry|Chemistry
+Faculty of Business Administration|Business
+Faculty of Economics|Economics
+
+1|Batuhan Sungur|batuhansungur@gmail.com|False
+2|John Doe|johndoe@example.com|True
+3|Alice Smith|alicesmith@gmail.com|False
+4|Bob Johnson|bjohnson@example.com|False
+5|Charlie Brown|charliebrown@gmail.com|True
+6|Eva Green|evagreen@example.com|False
+7|Michael White|michaelwhite@gmail.com|False
+8|Emma Black|emmablack@example.com|False
+9|Andrew Grey|andrewgrey@gmail.com|True
+10|Olivia Blue|oliviablue@example.com|False
+11|Sophie Red|sophiered@gmail.com|True
+12|Daniel Yellow|danielyellow@example.com|False
+13|Grace Purple|gracepurple@gmail.com|False
+14|James Orange|jamesorange@example.com|True
+
