@@ -153,7 +153,6 @@ class ArrayQueue(Queue):
     def is_full(self):
         return len(self.queue) == self.size
 
-# Example usage:
 array_up_stack = ArrayUpStack()
 array_down_stack = ArrayDownStack()
 linked_stack = LinkedStack()
