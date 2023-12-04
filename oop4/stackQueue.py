@@ -1,36 +1,37 @@
-class Stack:
-    def __init__(self, size):
-        """
-        Initialize a stack with a specified size.
-        """
-        pass
-    def push(self, element):
-        """
-        Push an element onto the stack.
-        """
-        pass
-    def pop(self):
-        """
-        Remove and return the top element from the stack.
-        """
-        pass
+from abc import ABC, abstractmethod
+
+class Container(ABC):
+    @abstractmethod
     def element(self):
-        """
-        Return the top element of the stack without removing it.
-        """
-        pass
-    def is_empty(self):
-        """
-        Check if the stack is empty.
-        """
-        pass
-    def is_full(self):
-        """
-        Check if the stack is full.
-        """
         pass
 
-class ArrayUpStack(Stack):
+    @abstractmethod
+    def is_empty(self):
+        pass
+
+    @abstractmethod
+    def is_full(self):
+        pass
+
+class Stack(Container):
+    @abstractmethod
+    def push(self, element):
+        pass
+
+    @abstractmethod
+    def pop(self):
+        pass
+
+class Queue(Container):
+    @abstractmethod
+    def enqueue(self, element):
+        pass
+
+    @abstractmethod
+    def dequeue(self):
+        pass
+
+class ArrayUpStack(Stack, Queue):
     def __init__(self):
         self.size = 5
         self.stack = []
@@ -52,8 +53,14 @@ class ArrayUpStack(Stack):
 
     def is_full(self):
         return len(self.stack) == self.size
-    
-class ArrayDownStack(Stack):
+
+    def enqueue(self, element):
+        self.push(element)
+
+    def dequeue(self):
+        return self.pop()
+
+class ArrayDownStack(Stack, Queue):
     def __init__(self):
         self.size = 5
         self.stack = []
@@ -76,12 +83,18 @@ class ArrayDownStack(Stack):
     def is_full(self):
         return len(self.stack) == self.size
 
-class Node:
-    def __init__(self, data):
-        self.data = data
-        self.next = None
+    def enqueue(self, element):
+        self.push(element)
 
-class LinkedStack(Stack):
+    def dequeue(self):
+        return self.pop()
+
+class LinkedStack(Stack, Queue):
+    class Node:
+        def __init__(self, data):
+            self.data = data
+            self.next = None
+
     def __init__(self):
         self.size = 5
         self.top = None
@@ -89,7 +102,7 @@ class LinkedStack(Stack):
 
     def push(self, element):
         if not self.is_full():
-            new_node = Node(element)
+            new_node = self.Node(element)
             new_node.next = self.top
             self.top = new_node
             self.count += 1
@@ -111,23 +124,61 @@ class LinkedStack(Stack):
     def is_full(self):
         return self.count == self.size
 
-up_stack = ArrayUpStack()
-down_stack = ArrayDownStack()
+    def enqueue(self, element):
+        self.push(element)
+
+    def dequeue(self):
+        return self.pop()
+
+class ArrayQueue(Queue):
+    def __init__(self):
+        self.size = 5
+        self.queue = []
+
+    def enqueue(self, element):
+        if not self.is_full():
+            self.queue.append(element)
+
+    def dequeue(self):
+        if not self.is_empty():
+            return self.queue.pop(0)
+
+    def element(self):
+        if not self.is_empty():
+            return self.queue[0]
+
+    def is_empty(self):
+        return len(self.queue) == 0
+
+    def is_full(self):
+        return len(self.queue) == self.size
+
+# Example usage:
+array_up_stack = ArrayUpStack()
+array_down_stack = ArrayDownStack()
 linked_stack = LinkedStack()
+array_queue = ArrayQueue()
 
+# Push elements into the stacks and the queue
 for i in range(1, 6):
-    up_stack.push(i * 2)  
-    down_stack.push(i * 3)  
-    linked_stack.push(i * 4)  
+    array_up_stack.enqueue(i * 2)
+    array_down_stack.enqueue(i * 3)
+    linked_stack.enqueue(i * 4)
+    array_queue.enqueue(i * 5)
 
+# Dequeue and print elements from the stacks and the queue
 print("ArrayUpStack:")
-while not up_stack.is_empty():
-    print(up_stack.pop())
+while not array_up_stack.is_empty():
+    print(array_up_stack.dequeue())
 
 print("ArrayDownStack:")
-while not down_stack.is_empty():
-    print(down_stack.pop())
+while not array_down_stack.is_empty():
+    print(array_down_stack.dequeue())
 
 print("LinkedStack:")
 while not linked_stack.is_empty():
-    print(linked_stack.pop())
+    print(linked_stack.dequeue())
+
+print("ArrayQueue:")
+while not array_queue.is_empty():
+    print(array_queue.dequeue())
