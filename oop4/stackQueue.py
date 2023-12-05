@@ -21,7 +21,7 @@ class Queue(ABC):
     def is_full(self):
         pass
 
-class Stack(Collection):
+class Stack(ABC):
     def __init__(self, size):
         self.size = size
 
@@ -53,14 +53,20 @@ class ArrayUpStack(Stack):
     def push(self, element):
         if not self.is_full():
             self.stack.insert(0, element)
+        else:
+            print("Error: ArrayUpStack is full. Cannot push element:", element)
 
     def pop(self):
         if not self.is_empty():
             return self.stack.pop(0)
+        else:
+            print("Error: ArrayUpStack is empty. Cannot pop element.")
 
     def element(self):
         if not self.is_empty():
             return self.stack[0]
+        else:
+            print("Error: ArrayUpStack is empty. No top element.")
 
     def is_empty(self):
         return len(self.stack) == 0
@@ -76,14 +82,20 @@ class ArrayDownStack(Stack):
     def push(self, element):
         if not self.is_full():
             self.stack.append(element)
+        else:
+            print("Error: ArrayDownStack is full. Cannot push element:", element)
 
     def pop(self):
         if not self.is_empty():
             return self.stack.pop()
+        else:
+            print("Error: ArrayDownStack is empty. Cannot pop element.")
 
     def element(self):
         if not self.is_empty():
             return self.stack[-1]
+        else:
+            print("Error: ArrayDownStack is empty. No top element.")
 
     def is_empty(self):
         return len(self.stack) == 0
@@ -108,6 +120,8 @@ class LinkedStack(Stack):
             new_node.next = self.top
             self.top = new_node
             self.count += 1
+        else:
+            print("Error: LinkedStack is full. Cannot push element:", element)
 
     def pop(self):
         if not self.is_empty():
@@ -115,10 +129,14 @@ class LinkedStack(Stack):
             self.top = self.top.next
             self.count -= 1
             return data
+        else:
+            print("Error: LinkedStack is empty. Cannot pop element.")
 
     def element(self):
         if not self.is_empty():
             return self.top.data
+        else:
+            print("Error: LinkedStack is empty. No top element.")
 
     def is_empty(self):
         return self.count == 0
@@ -137,10 +155,14 @@ class ArrayUpQueue(Queue):
     def dequeue(self):
         if not self.is_empty():
             return self.queue.pop(0)
+        else:
+            print("Error: ArrayUpQueue is empty. Cannot dequeue element.")
 
     def front(self):
         if not self.is_empty():
             return self.queue[0]
+        else:
+            print("Error: ArrayUpQueue is empty. No front element.")
 
     def is_empty(self):
         return len(self.queue) == 0
@@ -159,10 +181,15 @@ class ArrayDownQueue(Queue):
     def dequeue(self):
         if not self.is_empty():
             return self.queue.pop(0)
+        else:
+            print("Error: ArrayDownQueue is empty. Cannot dequeue element.")
 
     def front(self):
         if not self.is_empty():
             return self.queue[0]
+        else:
+            print("Error: ArrayDownQueue is empty. No front element.")
+
 
     def is_empty(self):
         return len(self.queue) == 0
@@ -193,10 +220,14 @@ class LinkedQueue(Queue):
             self.front_node = self.front_node.next
             self.count -= 1
             return data
+        else:
+            print("Error: LinkedQueue is empty. Cannot dequeue element.")
 
     def front(self):
         if not self.is_empty():
             return self.front_node.data
+        else:
+            print("Error: LinkedQueue is empty. No front element.")
 
     def is_empty(self):
         return self.count == 0
